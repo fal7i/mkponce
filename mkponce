@@ -1,0 +1,42 @@
+#! /bin/bash
+
+ponce="https://github.com/Ponce/slackbuilds/tree/current/"
+x=`pwd`
+echo $x>tmp
+rep=`awk -F'/' '{print $7}'  tmp`
+soft=`awk -F'/' '{print $8}'  tmp`
+ echo $rep/$soft
+
+wget -O lst "$ponce$rep/$soft"
+cat lst|grep "css-truncate css-truncate-target d-block width-fit" >tmp
+
+awk -F'=' '{print $4}' tmp > lst
+awk -F'"' '{print $2}' lst > tmp
+
+while read f; do
+ wget "https://raw.githubusercontent.com/Ponce/slackbuilds/current/$rep/$soft/$f"
+done < tmp
+
+#wget https://raw.githubusercontent.com/Ponce/slackbuilds/current/$rep/$soft/README
+#wget https://raw.githubusercontent.com/Ponce/slackbuilds/current/$rep/$soft/$soft.SlackBuild
+#wget https://raw.githubusercontent.com/Ponce/slackbuilds/current/$rep/$soft/$soft.info
+#wget https://raw.githubusercontent.com/Ponce/slackbuilds/current/$rep/$soft/slack-desc
+
+chmod a+x $soft.SlackBuild
+
+# TODO si DOWNLOAD_x86_64="" n'
+
+cat $soft.info |grep "DOWNLOAD=" > tmp
+d=` awk -F'=' '{print $2}'  tmp`
+download=`echo  $d | tr -d '"'`
+wget $download
+rm lst tmp
+ls
+
+cat $soft.info
+
+
+
+
+
+
